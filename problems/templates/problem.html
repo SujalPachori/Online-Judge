@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ req_problem.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="min-h-screen flex justify-start bg-gray-900 text-gray-100">
+    <main class="flex-1 p-6 md:px-10 max-w-4xl space-y-6">
+      
+      <!-- Problem Header -->
+      <div class="space-y-4 pb-4 border-b border-gray-700">
+        <h1 class="text-4xl font-bold">{{ req_problem.id }}. {{ req_problem.name }}</h1>
+        <span
+  class="inline-block text-sm font-semibold px-4 py-1 rounded-full
+    {% if req_problem.difficulty == 'Easy' %}
+      bg-green-100 text-green-800
+    {% elif req_problem.difficulty == 'Medium' %}
+      bg-yellow-100 text-yellow-700
+    {% elif req_problem.difficulty == 'Hard' %}
+      bg-red-100 text-red-700
+    {% else %}
+      bg-gray-100 text-gray-700
+    {% endif %}"
+>
+  {{ req_problem.difficulty }}
+</span>
+      </div>
+
+      <!-- Description Section -->
+      <article class="prose prose-invert prose-sm sm:prose-base lg:prose-lg max-w-none text-gray-200 leading-relaxed space-y-4">
+        {{ req_problem.description|linebreaks }}
+      </article>
+      
+    </main>
+  </body>
+</html>
