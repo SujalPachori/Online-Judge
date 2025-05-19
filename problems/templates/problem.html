@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ req_problem.name }}{% endblock %}
+
+{% block body_block %}
+<!-- Split layout wrapper -->
+<div id="split-wrapper" class="flex h-[calc(100vh-8rem)] overflow-hidden">
+
+  <!-- Left Pane: Problem Description -->
+  <div id="problem-pane" class="w-1/2 overflow-y-auto p-6 space-y-6 border-r border-gray-800 resize-x max-w-[70%] min-w-[30%]">
+
+    <div class="space-y-4 pb-4 border-b border-gray-700">
+      <h1 class="text-3xl font-bold">{{ req_problem.id }}. {{ req_problem.name }}</h1>
+      <span
+        class="inline-block text-sm font-semibold px-4 py-1 rounded-full
+          {% if req_problem.difficulty == 'Easy' %}
+            bg-green-100 text-green-800
+          {% elif req_problem.difficulty == 'Medium' %}
+            bg-yellow-100 text-yellow-700
+          {% elif req_problem.difficulty == 'Hard' %}
+            bg-red-100 text-red-700
+          {% else %}
+            bg-gray-100 text-gray-700
+          {% endif %}">
+        {{ req_problem.difficulty }}
+      </span>
+    </div>
+
+    <article class="prose prose-invert max-w-none text-gray-200 space-y-4">
+      {{ req_problem.description|linebreaks }}
+    </article>
+
+  </div>
+
+  <!-- Draggable Divider -->
+  <div id="divider" class="w-1 bg-gray-700 cursor-col-resize"></div>
+
+  <!-- Right Pane: Code Editor -->
+  <div id="editor-pane" class="flex-1 overflow-y-auto p-6 space-y-6">
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Language Selection -->
+      <div>
+        <label for="language" class="block mb-2 text-sm font-medium text-gray-300">Language:</label>
+        <select id="language" name="language" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
+          <option value="cpp">C++</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript</option>
+        </select>
+      </div>
+
+      <!-- Code Textarea -->
+      <div>
+        <label for="code" class="block mb-2 text-sm font-medium text-gray-300">Your Code:</label>
+        <textarea id="code" name="code" rows="18" class="w-full font-mono text-sm bg-gray-800 text-gray-100 border border-gray-700 rounded p-4 resize-y focus:ring-blue-500 focus:outline-none" placeholder="// Write your solution here..."></textarea>
+      </div>
+
+      <!-- Custom Testcase -->
+      <div>
+        <label for="testcase" class="block mb-2 text-sm font-medium text-gray-300">Custom Input:</label>
+        <textarea id="testcase" name="testcase" rows="4" class="w-full font-mono text-sm bg-gray-800 text-gray-100 border border-gray-700 rounded p-3 resize-y focus:ring-purple-500 focus:outline-none" placeholder="Enter input here..."></textarea>
+      </div>
+
+      <!-- Output Display -->
+      <div id="output-box" class="hidden bg-gray-800 text-sm text-green-400 border border-green-700 rounded p-4 whitespace-pre-wrap"></div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4">
+        <button type="button" onclick="runCode()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Run</button>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+<!-- Resize functionality -->
+<script>
+  const divider = document.getElementById("divider");
+  const problemPane = document.getElementById("problem-pane");
+  const editorPane = document.getElementById("editor-pane");
+
+  let isResizing = false;
+
+  divider.addEventListener("mousedown", function (e) {
+    isResizing = true;
+    document.body.style.cursor = 'col-resize';
+  });
+
+  window.addEventListener("mousemove", function (e) {
+    if (!isResizing) return;
+
+    const offsetLeft = e.clientX;
+    const minWidth = window.innerWidth * 0.3;
+    const maxWidth = window.innerWidth * 0.7;
+
+    if (offsetLeft > minWidth && offsetLeft < maxWidth) {
+      problemPane.style.width = offsetLeft + "px";
+    }
+  });
+
+  window.addEventListener("mouseup", function () {
+    isResizing = false;
+    document.body.style.cursor = 'default';
+  });
+
+  // Simulated Run button logic
+  function runCode() {
+    const code = document.getElementById('code').value;
+    const input = document.getElementById('testcase').value;
+    const outputBox = document.getElementById('output-box');
+
+    if (!code.trim()) {
+      alert('Please enter your code before running.');
+      return;
+    }
+
+    // Fake output simulation
+    outputBox.innerText = `Running code...\nInput:\n${input}\n\n[Output will appear here]\n\n(This is a simulated result)`;
+    outputBox.classList.remove("hidden");
+  }
+</script>
+{% endblock %}
+
+{% block submit %}
+<a class="text-lg font-medium hover:text-purple-400" href="/judge/submit/{{ req_problem.code }}">
+  Submit Solution
+</a>
+{% endblock %}

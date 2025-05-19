@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}All Problems{% endblock %}
+
+{% block body_block %}
+<header class="border-b border-gray-700 pb-4 mb-6">
+    <h1 class="text-3xl font-bold text-white">All Problems</h1>
+</header>
+
+<ul class="space-y-4">
+    {% for problem in all_problems %}
+    <li>
+        <a 
+            href="/problems/problem/{{ problem.id }}/"
+            class="block p-4 rounded-lg bg-gray-800 hover:bg-gray-700 transition shadow border border-gray-700"
+        >
+            <span class="text-lg font-medium text-white">{{ problem.id }}. {{ problem.name }}</span>
+        </a>
+    </li>
+    {% empty %}
+    <li class="text-gray-400">No problems available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

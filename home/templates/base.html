@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="bg-gray-900 text-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <title>POJ - {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white shadow-md px-6 py-4 flex items-center justify-between">
+        <div class="flex space-x-6">
+            <a href="/" class="text-lg font-medium hover:text-blue-400">Home</a>
+            <a href="/problems" class="text-lg font-medium hover:text-blue-400">Problems</a>
+            <a href="/about" class="text-lg font-medium hover:text-blue-400">About</a>
+            {% if perms.Problems.add_problem %}
+                <a href="/judge/add-problem" class="text-lg font-medium hover:text-blue-400">Add Problem</a>
+            {% endif %}
+            {% block submit %}{% endblock %}
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <a href="/auth/logout" class="text-lg font-medium hover:text-red-400">Logout</a>
+            {% else %}
+                <a href="/auth/login" class="text-lg font-medium hover:text-green-400">Login or Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:px-12">
+        {% block body_block %}{% endblock %}
+    </main>
+
+    <!-- Optional Footer -->
+    <footer class="bg-gray-800 text-gray-400 text-center py-4">
+        © 2025 CodeShrine. All rights reserved.
+    </footer>
+
+</body>
+</html>
