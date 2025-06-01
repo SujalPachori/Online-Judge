@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Code Ladder</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary-color: #4ade80;
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .problem-list-container {
+      max-width: 900px;
+      margin: auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    .page-title {
+      font-weight: bold;
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .problem-item {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: background 0.3s ease;
+      color: var(--text-color);
+    }
+
+    .problem-item:hover {
+      background: #232323;
+    }
+
+    .problem-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .problem-link h5 {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    /* Difficulty Colors */
+    .easy {
+      color: #22c55e;
+    }
+
+    .medium {
+      color: #f87171;
+    }
+
+    .hard {
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Problem List -->
+  <div class="container problem-list-container">
+    <h1 class="page-title">Master the Shrine!</h1>
+    <div class="list-group">
+      {% for problem in problems %}
+        <a href="{% url 'problem_detail' problem.pk %}" class="problem-link">
+          <div class="problem-item">
+            <h5>
+              <span class="{% if problem.difficulty == 'easy' %}easy{% elif problem.difficulty == 'medium' %}medium{% elif problem.difficulty == 'hard' %}hard{% endif %}">
+                ({% if problem.difficulty == 'easy' %}Easy{% elif problem.difficulty == 'medium' %}Medium{% elif problem.difficulty == 'hard' %}Hard{% endif %})
+              </span>
+              {{ problem.title }}
+            </h5>
+            <p>{{ problem.description|truncatewords:20 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

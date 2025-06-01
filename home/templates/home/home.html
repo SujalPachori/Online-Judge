@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodeShrine</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary-color: #4ade80; /* green */
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+      --alert-bg: #1a3324;
+      --alert-text: #4ade80;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .jumbotron {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    h1.display-4 {
+      color: var(--primary-color);
+    }
+
+    .btn-practice {
+      background-color: var(--primary-color);
+      color: #000;
+      font-weight: bold;
+      border: none;
+    }
+
+    .btn-practice:hover {
+      background-color: var(--hover-color);
+    }
+
+    .alert {
+      background-color: var(--alert-bg);
+      color: var(--alert-text);
+      border-left: 4px solid var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+
+  {% csrf_token %}
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item"><span class="navbar-text mr-3">Hi, {{ user.username }}!</span></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Messages -->
+  <div class="container mt-3">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="display-4">Welcome to CodeShrine</h1>
+      <p class="lead">Your shrine to practice, compete, and grow as a coder.</p>
+      <hr class="my-4" />
+      <h4>Why CodeShrine?</h4>
+      <ul>
+        <li><strong>Diverse Problems:</strong> Practice problems across levels and topics.</li>
+        <li><strong>Skill Growth:</strong> Improve your problem-solving day by day.</li>
+        <li><strong>Compete:</strong> Participate in coding contests and track rankings.</li>
+        <li><strong>Community:</strong> Learn and share with fellow coders.</li>
+        <li><strong>Portfolio:</strong> Track your coding journey.</li>
+      </ul>
+      <p class="mt-4">
+        <a class="btn btn-practice btn-lg" href="{% url 'problem_list' %}" role="button">Practice</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

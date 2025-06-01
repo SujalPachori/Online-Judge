@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Run Code - CodeShrine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary-color: #4ade80;
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    select, textarea {
+      width: 100%;
+      background-color: #2a2a2a;
+      color: var(--text-color);
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+    button[type="submit"] {
+      background-color: var(--primary-color);
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: var(--hover-color);
+    }
+
+    h2 {
+      color: var(--primary-color);
+      margin-top: 30px;
+      font-size: 1.25rem;
+    }
+
+    pre {
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    .back-link {
+      color: var(--primary-color);
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .back-link:hover {
+      color: var(--hover-color);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+      <li class="nav-item active"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+  <h1>Run Code</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label for="id_language">Select Language:</label>
+    <select name="language" id="id_language">
+      {% for choice in form.language.field.choices %}
+        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="id_code">Enter Code:</label>
+    <textarea name="code" id="id_code" rows="10" placeholder="# Write your code here..."></textarea>
+
+    <label for="id_input_data">Input Data (Optional):</label>
+    <textarea name="input_data" id="id_input_data" rows="5" placeholder="e.g. 4\n1 2 3 4"></textarea>
+
+    <button type="submit">Run</button>
+  </form>
+
+  {% if output %}
+    <h2>Output:</h2>
+    <pre>{{ output }}</pre>
+
+    <h2>Time Taken:</h2>
+    <pre>{{ time_taken }} seconds</pre>
+
+    <h2>Memory Used:</h2>
+    <pre>{{ memory_used }} KB</pre>
+  {% endif %}
+
+  <a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+</div>
+
+<!-- Bootstrap Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

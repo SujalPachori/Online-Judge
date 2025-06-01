@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submission Detail - CodeShrine</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary-color: #4ade80;
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .submission-container {
+      max-width: 900px;
+      margin: auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 20px;
+      color: var(--primary-color);
+    }
+
+    table.info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      color: var(--text-color);
+    }
+
+    table.info-table th, table.info-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #444;
+      text-align: left;
+    }
+
+    table.info-table th {
+      background-color: #22543d;
+      color: #c6f6d5;
+      font-weight: 600;
+    }
+
+    .verdict {
+      font-weight: bold;
+      color: #f56565;
+    }
+
+    .verdict.accepted {
+      color: #48bb78;
+    }
+
+    pre.code-block {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 5px;
+      color: #dcdcdc;
+      overflow-x: auto;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--primary-color);
+      border: none;
+      color: black;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background-color: var(--hover-color);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'submit_code' submission.problem.id %}">Submit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Submission Details -->
+<div class="container submission-container">
+  <div class="title">Submission Detail - {{ submission.problem.title }}</div>
+
+  <table class="info-table">
+    <tr>
+      <th>Submitted by</th>
+      <td>{{ submission.user.username }}</td>
+    </tr>
+    <tr>
+      <th>Language</th>
+      <td>{{ submission.language }}</td>
+    </tr>
+    <tr>
+      <th>Time Taken</th>
+      <td>{{ submission.time_taken }} seconds</td>
+    </tr>
+    <tr>
+      <th>Memory Used</th>
+      <td>{{ submission.memory_used }} KB</td>
+    </tr>
+    <tr>
+      <th>Verdict</th>
+      <td>
+        <span class="verdict {% if submission.verdict == 'Accepted' %}accepted{% endif %}">
+          {{ submission.verdict }}
+        </span>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-title">Code:</div>
+  <div style="position: relative;">
+    <pre id="codeBlock" class="code-block">{{ submission.code }}</pre>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+  </div>
+
+  <a href="{% url 'problem_detail' submission.problem.id %}" class="back-link">← Back to Problem Detail</a>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function copyCode() {
+    const code = document.getElementById('codeBlock').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      alert('Code copied to clipboard');
+    });
+  }
+</script>
+
+</body>
+</html>

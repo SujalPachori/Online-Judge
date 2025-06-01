@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submissions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #4ade80;
+      --hover: #22c55e;
+      --bg: #0f0f0f;
+      --text: #e5e5e5;
+      --card: #1a1a1a;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --danger-bg: rgba(239, 68, 68, 0.15);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 65px;
+    }
+
+    .navbar {
+      background-color: var(--card);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover,
+    .nav-link:hover {
+      color: var(--hover);
+    }
+
+    .nav-link {
+      color: var(--text);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .table-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    thead th {
+      background-color: var(--primary);
+      color: #000;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    tbody td {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text);
+      background-color: var(--bg);
+    }
+
+    tbody tr {
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    tbody tr:hover {
+      background-color: #1f1f1f;
+    }
+
+    tbody tr td:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    tbody tr td:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .table-success td {
+      background-color: var(--success-bg);
+      color: green;
+    }
+
+    .table-danger td {
+      background-color: var(--danger-bg);
+      color: red;
+    }
+
+    .table-success:hover td {
+      background-color: rgba(34, 197, 94, 0.25);
+    }
+
+    .table-danger:hover td {
+      background-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .view-link {
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .view-link:hover {
+      color: var(--hover);
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .pagination a,
+    .pagination .current {
+      display: inline-block;
+      color: var(--primary);
+      padding: 8px 14px;
+      margin: 0 4px;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .pagination a:hover {
+      background-color: var(--hover);
+      color: var(--bg);
+    }
+
+    .pagination .current {
+      background-color: var(--primary);
+      color: var(--bg);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'submission-list' %}">Submissions</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="table-container mt-5">
+    <h1>Submissions</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Problem</th>
+          <th>Language</th>
+          <th>Time</th>
+          <th>Memory</th>
+          <th>Verdict</th>
+          <th>Submitted</th>
+          <th>Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for submission in submissions %}
+          <tr class="{% if submission.verdict == 'Accepted' %}table-success{% else %}table-danger{% endif %}">
+            <td>{{ submission.id }}</td>
+            <td>{{ submission.user.username }}</td>
+            <td>{{ submission.problem.title }}</td>
+            <td>{{ submission.language }}</td>
+            <td>{{ submission.time_taken }}s</td>
+            <td>{{ submission.memory_used }}KB</td>
+            <td>{{ submission.verdict }}</td>
+            <td>{{ submission.submission_time }}</td>
+            <td><a class="view-link" href="{% url 'view_code' submission.id %}">View</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="step-links">
+        {% if current_page > 1 %}
+          <a href="?page=1">&laquo; First</a>
+          <a href="?page={{ current_page|add:"-1" }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ current_page }} of {{ total_pages }}
+        </span>
+
+        {% if current_page < total_pages %}
+          <a href="?page={{ current_page|add:"1" }}">Next</a>
+          <a href="?page={{ total_pages }}">Last &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

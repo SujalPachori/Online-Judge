@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ problem.title }} - CodeShrine</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary-color: #4ade80;
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .problem-container {
+      max-width: 900px;
+      margin: auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    .problem-title {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 20px;
+      color: var(--primary-color);
+    }
+
+    pre {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 5px;
+      color: #dcdcdc;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      float: right;
+      margin-bottom: 10px;
+      background-color: var(--primary-color);
+      border: none;
+      color: black;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background-color: var(--hover-color);
+    }
+
+    .meta-info {
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'submit_code' problem.id %}">Submit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Problem Details -->
+<div class="container problem-container">
+  <div class="problem-title">{{ problem.title }}</div>
+
+  <div class="description">
+    <p>{{ problem.description }}</p>
+  </div>
+
+  {% for pair in base_io_pairs %}
+    <div class="section-title">Sample Input {{ forloop.counter }}</div>
+    <button class="copy-btn" onclick="copyToClipboard('input-{{ forloop.counter }}')">Copy</button>
+    <pre id="input-{{ forloop.counter }}">{{ pair.0 }}</pre>
+
+    <div class="section-title">Sample Output {{ forloop.counter }}</div>
+    <pre id="output-{{ forloop.counter }}">{{ pair.1 }}</pre>
+  {% endfor %}
+
+  <div class="section-title">Time Limit</div>
+  <p class="meta-info">{{ problem.time_limit }} seconds</p>
+
+  <div class="section-title">Memory Limit</div>
+  <p class="meta-info">{{ problem.memory_limit }} KB</p>
+
+  <div class="section-title">Constraints</div>
+  <p class="meta-info">{{ problem.constraints }}</p>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function copyToClipboard(elementId) {
+    const text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard');
+    });
+  }
+</script>
+
+</body>
+</html>

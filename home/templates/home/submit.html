@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submit Solution</title>
+
+  <!-- Bootstrap CSS for consistent styling -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css" />
+
+  <style>
+    :root {
+      --primary-color: #4ade80;
+      --hover-color: #22c55e;
+      --bg-color: #121212;
+      --text-color: #e5e5e5;
+      --card-bg: #1e1e1e;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .navbar-brand:hover {
+      color: var(--hover-color);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .submit-container {
+      background: var(--card-bg);
+      max-width: 900px;          /* Wider max width */
+      margin: 15px auto 40px;    /* Reduced top margin for less gap */
+      padding: 30px 20px;        /* Narrower side padding to expand width */
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+    }
+
+    h1 {
+      font-weight: bold;
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      text-align: center;
+      user-select: none;
+    }
+
+    label {
+      color: var(--text-color);
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    select, textarea {
+      width: 100%;
+      background-color: #2a2a2a;
+      border: 1.8px solid var(--primary-color);
+      border-radius: 6px;
+      color: var(--text-color);
+      padding: 10px 14px;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--hover-color);
+      box-shadow: 0 0 6px var(--hover-color);
+    }
+
+    /* CodeMirror editor override */
+    .CodeMirror {
+      height: 400px;
+      border-radius: 6px;
+      border: 1.8px solid var(--primary-color);
+      background-color: #282a36; /* Dracula background */
+      font-size: 14px;
+      font-family: "Fira Mono", monospace;
+      color: #f8f8f2 !important;
+    }
+    .CodeMirror-focused {
+      border-color: var(--hover-color) !important;
+      box-shadow: 0 0 10px var(--hover-color);
+    }
+
+    /* Submit button */
+    input[type="submit"] {
+      background-color: var(--primary-color);
+      color: var(--bg-color);
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      margin-top: 20px;
+      width: 100%;
+      box-shadow: 0 6px 18px rgba(74, 222, 128, 0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background-color: var(--hover-color);
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.8);
+    }
+    input[type="submit"]:active {
+      background-color: #16a34a;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="{% url 'home' %}">CodeShrine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'problem_list' %}">Problems</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'submission-list' %}">Submissions</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'run_code' %}">Custom Test</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Submit Container -->
+  <div class="submit-container">
+    <h1>Submit Solution for {{ problem.title }}</h1>
+    <form method="post" action="" id="submit-form">
+      {% csrf_token %}
+
+      <label for="id_language">Select Language:</label>
+      <select id="id_language" name="language">
+        <option value="c">C</option>
+        <option value="cpp">C++</option>
+        <option value="python">Python</option>
+      </select>
+
+      <label for="id_code">Your Code:</label>
+      <textarea id="id_code" name="code" rows="10"></textarea>
+
+      <input type="submit" value="Submit Solution" />
+    </form>
+  </div>
+
+  <!-- CodeMirror JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+
+  <script>
+    const textarea = document.getElementById('id_code');
+    const languageSelect = document.getElementById('id_language');
+
+    function getMode(lang) {
+      switch(lang) {
+        case 'python': return 'python';
+        case 'cpp': return 'text/x-c++src';
+        case 'c': return 'text/x-csrc';
+        default: return 'python';
+      }
+    }
+
+    const editor = CodeMirror.fromTextArea(textarea, {
+      mode: getMode(languageSelect.value),
+      theme: 'dracula',
+      lineNumbers: true,
+      autoCloseBrackets: true,
+      matchBrackets: true,
+      indentUnit: 4,
+      tabSize: 4,
+      lineWrapping: true
+    });
+
+    languageSelect.addEventListener('change', () => {
+      editor.setOption('mode', getMode(languageSelect.value));
+    });
+
+    document.getElementById('submit-form').addEventListener('submit', e => {
+      textarea.value = editor.getValue();
+    });
+  </script>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
