@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required # type: ignore
 from .models import Problem, TestCase, Submission, CodeSubmission, Profile
 from django.utils import timezone # type: ignore
 from .forms import SubmissionForm, CodeSubmissionForm, ProfilePictureForm
+# import google.generativeai as genai
+from google import genai
 import json
 import subprocess
 import time
@@ -253,17 +255,44 @@ def custom_login_required(view_func):
 @custom_login_required
 def submit_code(request, problem_id):
     problem = get_object_or_404(Problem, pk=problem_id)
+    hint = None
+
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
+
     if request.method == 'POST':
-        form = SubmissionForm(request.POST)
-        if form.is_valid():
-            submission = form.save(commit=False)
-            submission.problem = problem
-            submission.user = request.user  # Set the user
-            submission.verdict, submission.time_taken, submission.memory_used = evaluate_code(request, submission)
-            submission.save()
-            return redirect('submission_detail', submission_id=submission.id)
+        if "get_hint" in request.POST:
+            code = request.POST.get('code', '')      # get the code user typed
+            language = request.POST.get('language', '')  # get selected language
+            prompt = (
+                f"You are an expert programming assistant.\n"
+                f"Please provide suggestions, improvements, or hints on the following {language} code for the problem titled '{problem.title}' and description '{problem.description}':\n\n"
+                f"{code}\n\n"
+                f"Focus on readability, logic, possible edge cases, and common mistakes. Do NOT solve the problem fully."
+            )
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                )
+                hint = response.text
+            except Exception:
+                hint = "Sorry, unable to fetch a hint at the moment."
+
+            form = SubmissionForm(initial={'code': code, 'language': language})  # fresh form with hint
+            return render(request, 'home/submit.html', {'form': form, 'problem': problem, 'hint': hint,'code': code,'language': language,})
+
+        else:
+            form = SubmissionForm(request.POST)
+            if form.is_valid():
+                submission = form.save(commit=False)
+                submission.problem = problem
+                submission.user = request.user
+                submission.verdict, submission.time_taken, submission.memory_used = evaluate_code(request, submission)
+                submission.save()
+                return redirect('submission_detail', submission_id=submission.id)
     else:
         form = SubmissionForm()
+
     return render(request, 'home/submit.html', {'form': form, 'problem': problem})
 
 def run_code(request):

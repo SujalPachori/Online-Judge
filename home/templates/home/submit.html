@@ -1,3 +1,4 @@
+{% load markdownify %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,13 +167,24 @@
 
       <label for="id_language">Select Language:</label>
       <select id="id_language" name="language">
-        <option value="c">C</option>
-        <option value="cpp">C++</option>
-        <option value="python">Python</option>
+      <option value="c" {% if language == 'c' %}selected{% endif %}>C</option>
+      <option value="cpp" {% if language == 'cpp' %}selected{% endif %}>C++</option>
+      <option value="python" {% if language == 'python' or not language %}selected{% endif %}>Python</option>
       </select>
 
       <label for="id_code">Your Code:</label>
-      <textarea id="id_code" name="code" rows="10"></textarea>
+      <textarea id="id_code" name="code" rows="10">{{ code|default_if_none:"" }}</textarea>
+
+ <button type="submit" name="get_hint" value="true" class="btn btn-outline-info mb-3">
+  💡 Get AI Hint
+</button>
+
+{% if hint %}
+  <div class="alert alert-info">
+    <strong>Hint:</strong>
+    {{ hint|markdownify }}
+  </div>
+{% endif %}
 
       <input type="submit" value="Submit Solution" />
     </form>
