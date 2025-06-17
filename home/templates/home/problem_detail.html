@@ -123,7 +123,7 @@
   <div class="problem-title">{{ problem.title }}</div>
 
   <div class="description">
-    <p>{{ problem.description }}</p>
+    <p>{{ problem.description|safe }}</p>
   </div>
 
   {% for pair in base_io_pairs %}
@@ -142,7 +142,7 @@
   <p class="meta-info">{{ problem.memory_limit }} KB</p>
 
   <div class="section-title">Constraints</div>
-  <p class="meta-info">{{ problem.constraints }}</p>
+  <p class="meta-info">{{ problem.constraints|safe }}</p>
 </div>
 
 <!-- Scripts -->

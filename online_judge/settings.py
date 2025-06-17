@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-^bhaes2ic3x6r!0w6kzc4ag(_tznx(pfmzbi&v0$ti+9sfk_u0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.111.38.38', 'localhost', '127.0.0.1', 'online-judge.me']
 
 
 # Application definition

@@ -91,11 +91,19 @@
     }
 
     .medium {
-      color: #f87171;
+      color:rgb(255, 167, 4);
     }
 
     .hard {
-      color: #60a5fa;
+      color: #f87171;
+    }
+
+    .truncate-preview {
+      max-height: 3.5rem;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* number of lines */
+      -webkit-box-orient: vertical;
     }
   </style>
 </head>
@@ -133,7 +141,7 @@
               </span>
               {{ problem.title }}
             </h5>
-            <p>{{ problem.description|truncatewords:20 }}</p>
+            {% comment %} <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">{{ problem.description|safe|truncatewords:20 }}</p> {% endcomment %}
           </div>
         </a>
       {% endfor %}
