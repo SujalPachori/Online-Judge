@@ -29,9 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^bhaes2ic3x6r!0w6kzc4ag(_tznx(pfmzbi&v0$ti+9sfk_u0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['3.111.38.38', 'localhost', '127.0.0.1', 'online-judge.me']
+# 
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -109,7 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = '/login/'
 
-CSRF_TRUSTED_ORIGINS = ['https://online-judge.me',]
+CSRF_TRUSTED_ORIGINS = ["https://codeshrine.xyz",
+    "https://www.codeshrine.xyz",]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
