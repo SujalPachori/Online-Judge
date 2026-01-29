@@ -271,12 +271,13 @@ def submit_code(request, problem_id):
             )
             try:
                 response = client.models.generate_content(
-                    model="gemini-2.0-flash",
+                    model="gemini-flash-latest",
                     contents=prompt,
                 )
                 hint = response.text
-            except Exception:
-                hint = "Sorry, unable to fetch a hint at the moment."
+            except Exception as e:
+                print(f"Hint generation error: {str(e)}")
+                hint = f"Sorry, unable to fetch a hint at the moment. Error: {str(e)}"
 
             form = SubmissionForm(initial={'code': code, 'language': language})  # fresh form with hint
             return render(request, 'home/submit.html', {'form': form, 'problem': problem, 'hint': hint,'code': code,'language': language,})
